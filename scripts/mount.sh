@@ -1,5 +1,9 @@
 #!/bin/sh
+dir=$HOME/Code/lpsmagic
+mnt=/scratchbox/users/$USER/home/$USER/lpsmagic
 
 sudo /scratchbox/sbin/sbox_ctl start
 sudo /scratchbox/sbin/sbox_sync
-sudo mount -o bind $HOME/projects/lpsmagic /scratchbox/users/$USER/home/$USER/lpsmagic
+
+mkdir $mnt
+sudo mount -o bind $dir $mnt

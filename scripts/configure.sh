@@ -1,3 +1,4 @@
 #!/bin/sh
-
-/scratchbox/login -d $HOME/lpsmagic/build cmake ..
+dir="$HOME/lpsmagic/build"
+/scratchbox/login mkdir -p $dir
+/scratchbox/login -d $dir cmake ..
