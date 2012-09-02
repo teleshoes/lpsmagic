@@ -40,14 +40,29 @@ LpsMagic::LpsMagic (int& argc, char** argv) : QApplication (argc, argv)
       dbus->RestartSysuid();
     }
     settings=new QSettings(CONFIG_FILE,QSettings::IniFormat);
-    if(arguments().contains("-demo")){
-	qxtLog->info("It's a oneshot call.");
+    if(arguments().contains("-once")){
+        QImage img=RendererManager::instance()->render();
+        QString imgPath1 = QString("/tmp/lpsmagic-once1.png");
+        QString imgPath2 = QString("/tmp/lpsmagic-once2.png");
+        img.save(imgPath1);
+        img.save(imgPath2);
+        
+        char* gconfKey = "/desktop/meego/screen_lock/low_power_mode/operator_logo";
+        gclient=gconf_client_get_default();
+        GError *e=new GError;
+        gconf_client_set_string(gclient,gconfKey,imgPath1.toStdString().c_str(),&e);
+        gconf_client_set_string(gclient,gconfKey,imgPath2.toStdString().c_str(),&e);
+        delete e;
+        oneshot=true;
+    }else if(arguments().contains("-demo")){
+        qxtLog->info("It's a oneshot call.");
         renderFile();
         oneshot=true;
     }else if(arguments().contains("--help") || arguments().contains("-h")){
       cout<<"Lpsmagic - Low power screen manager\n";
       cout<<"\tUsage: lpsmagic [-h|--help] [-demo [configstring]]\n";
       cout<<"\t\t-h/--help: Displays this message\n";
+      cout<<"\t\t-once : Render the image and display it, then exit";
       cout<<"\t\t-demo : Generate out.png in the current directory";
       cout<<"\t\tconfigstring: Sets new configstring\n";
     }else{
