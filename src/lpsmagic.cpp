@@ -26,7 +26,6 @@
 #include "qxtbasicstdloggerengine.h"
 
 #define CONFIG_FILE "/home/user/.lpsmagic"
-#define USER_CONFIG_FILE "/home/user/MyDocs/lpsmagic.conf"
 using namespace std;
 LpsMagic::LpsMagic (int& argc, char** argv) : QApplication (argc, argv)
 {
@@ -37,12 +36,6 @@ LpsMagic::LpsMagic (int& argc, char** argv) : QApplication (argc, argv)
     if(!QFile(CONFIG_FILE).exists()){
       qxtLog->info("Creating config file ",CONFIG_FILE);
       QFile::copy("/opt/lpsmagic/lpsmagicconf.example",CONFIG_FILE);
-      dbus->UpdateCss();
-      dbus->RestartSysuid();
-    }else if(QFile(USER_CONFIG_FILE).exists()){
-      qxtLog->info("Moving config file from ",USER_CONFIG_FILE," to ",CONFIG_FILE);
-      QFile::copy(USER_CONFIG_FILE,CONFIG_FILE);
-      QFile::remove(USER_CONFIG_FILE);
       dbus->UpdateCss();
       dbus->RestartSysuid();
     }
