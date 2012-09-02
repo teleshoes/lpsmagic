@@ -46,10 +46,8 @@ public:
     virtual void init();
 private:
     void batIcon();
-    void batCapacity(QString suffix);
     void batPercent(QString suffix);
-    void batPower(QString suffix);
-    void batTime(QString type,QString format);
+    void batCurrent(QString suffix);
     void batman();
     MeeGo::QmBattery *battery;
     int lh;

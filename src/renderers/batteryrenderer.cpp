@@ -55,9 +55,8 @@ QString BatteryRenderer::brief (QString prefix)
 
 /*
  * %batIcon  battery state icon (use resource system)
- * %batCapacity bat capacity mAh/%
- * %batPower
- * %batTime (dis)charge time rimaining (idle,talk,active)
+ * %batPercent bat remaining percent
+ * %batCurrent current in mA {positive is discharging}
  * %batman lol
  */
 QImage* BatteryRenderer::render (QString prefix)
@@ -67,14 +66,10 @@ QImage* BatteryRenderer::render (QString prefix)
     qxtLog->info(QString("Will render in battery plugin prefix: %1").arg(pref));
     if(pref=="batIcon"){
       batIcon();
-    }else if(pref=="batCapacity"){
-      batCapacity(tokens.at(1));
-    }else if(pref=="batPower"){
-      batPower(tokens.at(1));
     }else if(pref=="batPercent"){
       batPercent(tokens.at(1));
-    }else if(pref=="batTime"){
-      batTime(tokens.at(1),tokens.at(2));
+    }else if(pref=="batCurrent"){
+      batCurrent(tokens.at(1));
     }else{
       //batman
       batman();
@@ -117,6 +112,25 @@ void BatteryRenderer::batIcon()
       }
     }
 }
+
+void BatteryRenderer::batPercent(QString suffix)
+{
+  int percent=battery->getRemainingCapacityPct();
+  QString cap("%1%2");
+  cap=cap.arg(percent).arg(suffix);
+  int iw=RenderUtil::expectedTextWidth(cap);
+  out=RendererManager::instance()->renderPrefix("dumbtext",QString("{")+cap+"}");
+}
+
+void BatteryRenderer::batCurrent(QString suffix)
+{
+  int current=battery->getBatteryCurrent();
+  QString cap("%1%2");
+  cap=cap.arg(current).arg(suffix);
+  int iw=RenderUtil::expectedTextWidth(cap);
+  out=RendererManager::instance()->renderPrefix("dumbtext",QString("{")+cap+"}");
+}
+
 void BatteryRenderer::batman()
 {
     int iw=lh*2.1;
@@ -143,74 +157,4 @@ void BatteryRenderer::batman()
     path.cubicTo(0.28*sw,0.33*sh,0.23*sw,0.44*sh,0.42*sw,0.34*sh);
     
     p.drawPath(path); 
-    
-    
-}
-
-void BatteryRenderer::batCapacity(QString suffix)
-{
-  int capacity=battery->getRemainingCapacitymAh();
-  QString cap("%1%2");
-  cap=cap.arg(capacity).arg(suffix);
-  int iw=RenderUtil::expectedTextWidth(cap);
-  out=RendererManager::instance()->renderPrefix("dumbtext",QString("{")+cap+"}");
-}
-
-void BatteryRenderer::batPercent(QString suffix)
-{
-  int current=battery->getRemainingCapacityPct();
-  QString cap("%1%2");
-  cap=cap.arg(current).arg(suffix);
-  int iw=RenderUtil::expectedTextWidth(cap);
-  out=RendererManager::instance()->renderPrefix("dumbtext",QString("{")+cap+"}");
-}
-
-void BatteryRenderer::batPower(QString suffix)
-{
-  int current=battery->getBatteryCurrent();
-  int voltage=battery->getVoltage();
-  float p=current*voltage;
-  QString cap("%1%2");
-  if(suffix=="W"){
-    p=p/1000;
-    cap.arg(p,0,'g',2).arg(suffix);
-  }else{
-    cap.arg(p,0,'g',0).arg(suffix);
-  }
-  out=RendererManager::instance()->renderPrefix("dumbtext",QString("{")+cap+"}");
-}
-
-void BatteryRenderer::batTime(QString type, QString format)
-{
-  int secs;
-  int days;
-  if(battery->getState()==MeeGo::QmBattery::StateCharging){
-    secs=battery->getRemainingChargingTime();
-  }else{
-    if(type.contains("talk")){
-      if(type.contains("powersave")){
-        secs=battery->getRemainingTalkTime(MeeGo::QmBattery::PowersaveMode);
-      }else{
-        secs=battery->getRemainingTalkTime(MeeGo::QmBattery::NormalMode);
-      }
-    }else if(type.contains("active")){
-      if(type.contains("powersave")){
-        secs=battery->getRemainingActiveTime(MeeGo::QmBattery::PowersaveMode);
-      }else{
-        secs=battery->getRemainingActiveTime(MeeGo::QmBattery::NormalMode);
-      }
-    }else{
-      if(type.contains("powersave")){
-        secs=battery->getRemainingIdleTime(MeeGo::QmBattery::PowersaveMode);
-      }else{
-        secs=battery->getRemainingIdleTime(MeeGo::QmBattery::NormalMode);
-      }
-    }
-  }
-  days=secs/86400;
-  secs-=days*86400;
-  QTime time(0,0);
-  time.addSecs(secs);
-  format.arg(days).arg(time.hour()).arg(time.minute()).arg(time.second());
-  out=RendererManager::instance()->renderPrefix("dumbtext",QString("{")+format+"}");
 }

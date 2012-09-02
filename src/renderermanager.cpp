@@ -96,9 +96,8 @@ RendererManager::RendererManager() : QObject()
     registerRenderer("date",dateRenderer);
     registerRenderer("batman",batRenderer);
     registerRenderer("batIcon",batRenderer);
-    registerRenderer("batCapacity",batRenderer);
-    registerRenderer("batPower",batRenderer);
     registerRenderer("batPercent",batRenderer);
+    registerRenderer("batCurrent",batRenderer);
     registerRenderer("batTime",batRenderer);
     registerRenderer("icon",iconRenderer);
     registerRenderer("dumbtext",dumbtext);
