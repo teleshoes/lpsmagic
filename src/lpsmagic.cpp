@@ -76,7 +76,6 @@ LpsMagic::LpsMagic (int& argc, char** argv) : QApplication (argc, argv)
         gclient=gconf_client_get_default();
         render();
     }
-    
 }
 
 LpsMagic::~LpsMagic()
@@ -108,12 +107,12 @@ void LpsMagic::render()
     int delta=settings->value("heartbeatDelta",5).toInt();
     if(settings->value("Tickless",false).toBool()){
       if(mint>0){
-	ticker.wait(mint-delta,mint+delta,MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
+          ticker.wait(mint-delta,mint+delta,MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
       }else{
-	
+
       }
     }else{
-    ticker.wait(maxt-delta,maxt+delta,MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
+        ticker.wait(maxt-delta,maxt+delta,MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
     }
 }
 
