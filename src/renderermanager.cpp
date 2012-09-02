@@ -34,6 +34,7 @@
 
 
 //All renderers init
+#include "renderers/cmdrenderer.h"
 #include "renderers/dumbtext.h"
 #include "renderers/daterenderer.h"
 #include "renderers/batteryrenderer.h"
@@ -84,6 +85,8 @@ RendererManager::RendererManager() : QObject()
     invalid=new QList<RenderedImage*>;
     
     //initialize static renderers
+    Renderer *cmdRenderer=new CmdRenderer();
+    cmdRenderer->init();
     Renderer *dateRenderer=new DateRenderer();
     dateRenderer->init();
     Renderer *batRenderer=new BatteryRenderer();
@@ -93,6 +96,7 @@ RendererManager::RendererManager() : QObject()
     Renderer *dumbtext=new DumbText();
     dumbtext->init();
     //register static renderers
+    registerRenderer("cmd",cmdRenderer);
     registerRenderer("date",dateRenderer);
     registerRenderer("batman",batRenderer);
     registerRenderer("batIcon",batRenderer);
