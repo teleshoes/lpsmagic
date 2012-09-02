@@ -30,12 +30,12 @@ using namespace std;
 LpsMagic::LpsMagic (int& argc, char** argv) : QApplication (argc, argv)
 {
     qxtLog->info("Logging started");
-    dbus=new OrgAdmiral0LpsmagicInterface("org.admiral0.lpsmagic","/",QDBusConnection::systemBus());
     oneshot=false;
     
     if(!QFile(CONFIG_FILE).exists()){
       qxtLog->info("Creating config file ",CONFIG_FILE);
       QFile::copy("/opt/lpsmagic/lpsmagicconf.example",CONFIG_FILE);
+      dbus=new OrgAdmiral0LpsmagicInterface("org.admiral0.lpsmagic","/",QDBusConnection::systemBus());
       dbus->UpdateCss();
       dbus->RestartSysuid();
     }
