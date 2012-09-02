@@ -40,9 +40,6 @@ LpsMagic::LpsMagic (int& argc, char** argv) : QApplication (argc, argv)
       dbus->RestartSysuid();
     }
     settings=new QSettings(CONFIG_FILE,QSettings::IniFormat);
-    ticker.open(MeeGo::QmHeartbeat::SignalNeeded);
-    connect(&ticker,SIGNAL(wakeUp(QTime)),this,SLOT(render()));
-    connect(&displaystate,SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
     if(arguments().contains("-demo")){
 	qxtLog->info("It's a oneshot call.");
         renderFile();
@@ -54,6 +51,9 @@ LpsMagic::LpsMagic (int& argc, char** argv) : QApplication (argc, argv)
       cout<<"\t\t-demo : Generate out.png in the current directory";
       cout<<"\t\tconfigstring: Sets new configstring\n";
     }else{
+        ticker.open(MeeGo::QmHeartbeat::SignalNeeded);
+        connect(&ticker,SIGNAL(wakeUp(QTime)),this,SLOT(render()));
+        connect(&displaystate,SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
         odd=false;
         lolbuffer=qMakePair<QString,QString>("/tmp/lpsmagic.png","/tmp/lpsmagic1.png");
         //ticker.wait(0,15,MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
