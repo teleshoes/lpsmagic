@@ -79,7 +79,7 @@ QImage* CmdRenderer::render (QString prefix)
     {
         out = out.substr(0, linePos);
     }
-    QString text = QString::fromStdString(out);
+    QString text = QString::fromUtf8(QByteArray(out.c_str(), out.length()));
     qxtLog->info(QString("cmd first line stdout: %1").arg(text));
     QColormap cmap=QColormap::instance(0);
     uint pix;
