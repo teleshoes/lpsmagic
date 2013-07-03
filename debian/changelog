@@ -1,3 +1,7 @@
+lpsmagic (1.82) UNRELEASED; urgency=low
+  * utf8
+ -- teleshoes <elliot.wolk@gmail.com>  Wed, 03 Jul 2013 18:40:55 -0500
+
 lpsmagic (1.81) UNRELEASED; urgency=low
 
   * Prealpha 1
