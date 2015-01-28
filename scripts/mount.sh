@@ -5,5 +5,5 @@ mnt=/scratchbox/users/$USER/home/$USER/lpsmagic
 sudo /scratchbox/sbin/sbox_ctl start
 sudo /scratchbox/sbin/sbox_sync
 
-mkdir $mnt
+mkdir -p $mnt
 sudo mount -o bind $dir $mnt
